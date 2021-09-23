@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import API from "./clients/BackendClient";
 function App() {
     const [test, setTest] = useState("Loading...");
+
     useEffect(() => {
         API.get('/')
             .then(res =>{
                 setTest(res.data);
             });
-
     }, []);
 
     return (
