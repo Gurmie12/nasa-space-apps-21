@@ -1,11 +1,20 @@
-import React from 'react';
-
+import React, {useEffect, useState} from 'react';
+import API from "./clients/BackendClient";
 function App() {
-  return (
-    <div className="App">
-      Nasa Space Apps
-    </div>
-  );
+    const [test, setTest] = useState("Loading...");
+    useEffect(() => {
+        API.get('/')
+            .then(res =>{
+                setTest(res.data);
+            });
+
+    }, []);
+
+    return (
+        <div className="App">
+            <h1>{test}</h1>
+        </div>
+    );
 }
 
 export default App;
