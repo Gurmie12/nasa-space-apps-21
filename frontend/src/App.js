@@ -4,6 +4,7 @@ import Router from "./Router";
 import HomePage from "./Components/HomePage";
 import NavBar from "./Components/NavBar";
 import Footer from "./Components/Footer";
+import homebar from "./Components/homebar";
 
 function App() {
     const [test, setTest] = useState("Loading...");
@@ -17,7 +18,7 @@ function App() {
 
     return (
         <>
-            <Router HomePage={HomePage} NavBar={NavBar} Footer={Footer} routes={null}/>
+            <Router HomePage={HomePage} NavBar={homebar} Footer={Footer} routes={null}/>
         </>
     );
 }
