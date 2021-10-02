@@ -85,7 +85,7 @@ auth.post('/login', (req, res) => {
                 if(await bcrypt.compare(password, user.password)){
                     const randUid = randToken.generate(256);
                     const token = jwt.sign(
-                        { user_id: user._id, email, refreshToken: randUid },
+                        { user_id: user._id, email, refreshToken: randUid, firstName: user.firstName, lastName: user.lastName, username: user.username },
                         process.env.TOKEN_KEY,
                         {
                             expiresIn: "2h",
@@ -143,10 +143,11 @@ auth.post('/refreshToken', (req, res) =>{
                         'success': 'User not found!'
                     });
                 }else{
-                    if(result[0].refreshToken === decoded.refreshToken){
+                    const user = result[0];
+                    if(user.refreshToken === decoded.refreshToken){
                         const randUid = randToken.generate(256);
                         const token = jwt.sign(
-                            { user_id: decoded.user_id, email: result[0].email, refreshToken: randUid },
+                            { user_id: user._id, email: user.email, refreshToken: randUid, firstName: user.firstName, lastName: user.lastName, username: user.username },
                             process.env.TOKEN_KEY,
                             {
                                 expiresIn: "2h",
