@@ -5,8 +5,9 @@ import HomePage from "./Components/HomePage/HomePage";
 import NavBar from "./Components/NavBar";
 import Footer from "./Components/Footer";
 import styled from "styled-components";
-import Signup from "./Components/Signup";
-import Login from "./Components/Login";
+import Store from './Store/Store';
+import { Provider } from "react-redux";
+
 
 function App() {
 
@@ -26,21 +27,11 @@ function App() {
             });
     }, []);
 
-    const routes = {
-        Signup: {
-            routePath: "/Signup",
-            component: Signup
-        },
-        Login: {
-            routePath: "/Login",
-            component: Login
-        }
-
-    };
-
     return (
         <Container>
-            <Router HomePage={HomePage} NavBar={NavBar} Footer={Footer} routes={routes}/>
+            <Provider store={Store}>
+                <Router HomePage={HomePage} NavBar={NavBar} Footer={Footer} />
+            </Provider>
         </Container>
     );
 }
