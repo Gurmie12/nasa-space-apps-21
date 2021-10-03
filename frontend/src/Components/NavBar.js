@@ -49,7 +49,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const NavBar = (props) =>{
-    const {firstName, lastName, isLoggedIn} = props.user;
+    const {firstName, lastName, isLoggedIn, isContributor} = props.user;
     const {logoutUser, addAlert} = props;
 
     const history = useHistory();
@@ -86,9 +86,11 @@ const NavBar = (props) =>{
                         inputProps={{ 'aria-label': 'search' }}
                     />
                 </Search>
-                        <ButtonGroup variant="text" color={"inherit"}>
-                            <Button>Create Console Log</Button>
-                        </ButtonGroup>
+                        {isContributor &&
+                            <ButtonGroup variant="text" color={"inherit"}>
+                                <Button>Create Console Log</Button>
+                            </ButtonGroup>
+                        }
                     </>
                 }
                 <Box sx={{ flexGrow: 1 }} />

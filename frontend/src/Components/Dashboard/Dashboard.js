@@ -1,26 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import {
     Card,
-    Typography,
-    List,
-    ListItem,
-    Avatar,
-    ListItemText,
-    Chip,
-    Stack,
-    Box,
-    Modal, Button
+    CircularProgress
 } from "@mui/material";
-import LaunchIcon from '@mui/icons-material/Launch';
-import {useHistory} from "react-router";
+import API from "../../clients/BackendClient";
+import MissionCard from "./MissionCard";
 
 const Dashboard = (props) =>{
-    const history = useHistory();
+    const [isLoading, setIsLoading] = useState(false);
+    const [consoleLogs, setConsoleLogs] = useState(null);
 
-    const openLog = () =>{
-        history.push('/log?id=1');
-    }
+    useEffect(() =>{
+        setIsLoading(true);
+        API.get(`/logs/getAllLogs`).then((res) =>{
+            if(res.status === 201){
+                setConsoleLogs(res.data);
+                setIsLoading(false);
+            }else{
+                throw Error("Internal Server Error");
+            }
+        })
+    }, []);
 
     const Container = styled.div`
       display: flex;
@@ -50,97 +51,47 @@ const Dashboard = (props) =>{
       height: 100%;
     `;
 
-    const TitleContainer = styled.div`
-      display: flex;
+    const LoadingContainer = styled(Container)`
       justify-content: center;
-      align-items: center;
-      height: 10%;
-      width: 100%;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      text-align: center;
     `;
 
-    const CustomCard = styled(Card)`
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    `;
+    if(isLoading){
+        return(
+            <LoadingContainer>
+            <CircularProgress />
+        </LoadingContainer>
+        );
+    }
 
-    const ConsoleLogContainer = styled.div`
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1rem;
-      width: 100%;
-      height: 80%;
-      overflow-y: scroll;
-    `;
-
-    const CustomStack = styled(Stack)`
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-    `;
-
-    const CustomListItem = styled(ListItem)`
-      border-top: 1px solid black;
-      border-bottom: 1px solid black;
-    `;
+    if(consoleLogs && consoleLogs.length > 0){
+        return (
+            <Container>
+                <Row>
+                    <Column>
+                        <MissionCard data={consoleLogs[0]} />
+                    </Column>
+                    <br />
+                    <Column>
+                        <MissionCard data={consoleLogs[1]} />
+                    </Column>
+                </Row>
+                <Row>
+                    <Column>
+                        <MissionCard data={consoleLogs[2]} />
+                    </Column>
+                    <br />
+                    <Column>
+                        <MissionCard data={consoleLogs[3]} />
+                    </Column>
+                </Row>
+            </Container>
+        )
+    }
 
     return (
-       <Container>
-            <Row>
-                <Column>
-                    <CustomCard elevation={24} style={{height: '100%', width: '100%'}}>
-                        <TitleContainer>
-                            <Typography variant={'h3'}>Test Mission</Typography>
-                        </TitleContainer>
-                        <ConsoleLogContainer>
-                            <List style={{height: '100%', width: '100%', overFlowY: 'none'}}>
-                                <CustomListItem>
-                                    <ListItemText>
-                                        <CustomStack direction={"row"} spacing={1}>
-                                            <Stack direction={"row"} spacing={1}>
-                                                <Chip label={"Gurman Brar"} style={{fontSize: '10px'}} />
-                                                <Chip label={"02-10-2021"} style={{fontSize: '10px'}}/>
-                                            </Stack>
-                                            <Stack direction={"row"} spacing={0}>
-                                                <Typography variant={"body2"}>Some console log message what if this is a really long message and there is a lot of space consumed by this message</Typography>
-                                                <Button onClick={openLog}><LaunchIcon/></Button>
-                                            </Stack>
-                                        </CustomStack>
-                                    </ListItemText>
-                                </CustomListItem>
-                            </List>
-                        </ConsoleLogContainer>
-                    </CustomCard>
-                </Column>
-                <br />
-                <Column>
-                    <CustomCard elevation={24} style={{height: '100%', width: '100%'}}>
-                        2
-                    </CustomCard>
-                </Column>
-            </Row>
-           <Row>
-               <Column>
-                   <CustomCard elevation={24} style={{height: '100%', width: '100%'}}>
-                       3
-                   </CustomCard>
-               </Column>
-               <br />
-               <Column>
-                   <CustomCard elevation={24} style={{height: '100%', width: '100%'}}>
-                       4
-                   </CustomCard>
-               </Column>
-           </Row>
-       </Container>
+        <h1>ERROR</h1>
     )
+
 };
 
 export default Dashboard;

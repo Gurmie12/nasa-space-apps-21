@@ -23,7 +23,7 @@ const Login = ({logInUser, addAlert}) => {
                 if (res.status === 201 && res.data.success) {
                     if(res.data.token){
                         const data = jwtDecode(res.data.token);
-                        logInUser({email: data.email, username: data.username, firstName: data.firstName, lastName: data.lastName, userId: data.user_id, refreshToken: data.refreshToken, jwtToken: res.data.token})
+                        logInUser({email: data.email, username: data.username, firstName: data.firstName, lastName: data.lastName, userId: data.user_id, refreshToken: data.refreshToken, jwtToken: res.data.token, isContributor: data.isContributor})
                         history.push('/dashboard');
                         addAlert({alertType: "success", alertMessage: res.data.success})
                     }else{
@@ -65,11 +65,6 @@ const Login = ({logInUser, addAlert}) => {
                 <br/>
                 <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth
                         onClick={handleLogin}>Sign in</Button>
-                <Typography> Do you have an account? {''}
-                    <Link href="#">
-                        Sign Up
-                    </Link>
-                </Typography>
             </Paper>
         </Grid>
     )

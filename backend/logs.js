@@ -7,9 +7,9 @@ dotenv.config();
 const uri = `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@spaceappscluster.1ebzr.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`;
 const logs = express();
 
-logs.get('/getLog', (req, res) =>{
+logs.get('/getLog', (req, res) => {
     const {userId, numberOfPosts, offset, mission} = req.query;
-    MongoClient.connect(uri,(err, client) => {
+    MongoClient.connect(uri, (err, client) => {
         if (err) {
             res.statusCode = 500;
             res.json({
@@ -18,8 +18,8 @@ logs.get('/getLog', (req, res) =>{
         }
 
         const db = client.db(process.env.MONGO_DB_NAME);
-        db.collection('logs').find({$and: [{userId: {$eq: userId}}, {missionName: {$eq: mission}}]}).skip(parseInt(offset)).sort('data', 'descending').limit(parseInt(numberOfPosts)).toArray((err, result) =>{
-            if(err){
+        db.collection('logs').find({$and: [{userId: {$eq: userId}}, {missionName: {$eq: mission}}]}).skip(parseInt(offset)).sort('data', 'descending').limit(parseInt(numberOfPosts)).toArray((err, result) => {
+            if (err) {
                 res.status(500).json({
                     err: 'DB error: ' + err.message
                 })
@@ -31,9 +31,70 @@ logs.get('/getLog', (req, res) =>{
 
 });
 
-logs.get('/like', (req, res) =>{
+logs.get('/getAllLogs', (req, res) => {
+    MongoClient.connect(uri, (err, client) => {
+        if (err) {
+            res.statusCode = 500;
+            res.json({
+                err: 'DB could not connect: ' + err.message
+            });
+        }
+
+        const db = client.db(process.env.MONGO_DB_NAME);
+        db.collection('logs').aggregate([{$match: {missionName: {$in: ["Test Mission 1", "Test Mission 2", "Test Mission 3", "Test Mission 4"]}}}, {
+            $group: {
+                _id: '$missionName',
+                consoleLogs: {
+                    $push: {
+                        _id: "$_id",
+                        date: "$date",
+                        time: "$time",
+                        userId: "$userId",
+                        message: "$message",
+                        metadata: {likes: "$metadata.likes", comments: "$metadata.comments"}
+                    }
+                }
+            }
+        }]).toArray((err, result) => {
+            if (err) {
+                res.status(500).json({
+                    err: 'DB error: ' + err.message
+                })
+            }
+
+            res.status(201).json(result);
+        });
+    });
+
+});
+
+logs.get('/getSingleLog', (req, res) => {
     const {logId} = req.query;
-    MongoClient.connect(uri,(err, client) => {
+    MongoClient.connect(uri, (err, client) => {
+        if (err) {
+            res.statusCode = 500;
+            res.json({
+                err: 'DB could not connect: ' + err.message
+            });
+        }
+
+        const db = client.db(process.env.MONGO_DB_NAME);
+        const objId = new ObjectId(logId)
+        db.collection('logs').find({_id: objId}).toArray((err, result) => {
+            if (err) {
+                res.status(500).json({
+                    err: 'DB error: ' + err.message
+                })
+            }
+
+            res.status(201).json(result);
+        });
+    });
+});
+
+logs.get('/like', (req, res) => {
+    const {logId} = req.query;
+    MongoClient.connect(uri, (err, client) => {
         if (err) {
             res.statusCode = 500;
             res.json({
@@ -43,8 +104,8 @@ logs.get('/like', (req, res) =>{
 
         const db = client.db(process.env.MONGO_DB_NAME);
         const objId = new ObjectId(logId);
-        db.collection('logs').updateOne({_id: objId}, {$inc: {"metadata.likes": 1}}, (err, result) =>{
-            if(err){
+        db.collection('logs').updateOne({_id: objId}, {$inc: {"metadata.likes": 1}}, (err, result) => {
+            if (err) {
                 res.status(500).json({
                     err: "DB error " + err.message
                 });
@@ -56,7 +117,7 @@ logs.get('/like', (req, res) =>{
 
 });
 
-logs.post('/comment', (req, res) =>{
+logs.post('/comment', (req, res) => {
     const {userId, logId, comment} = req.body;
     const date_ob = new Date();
     const day = ("0" + date_ob.getDate()).slice(-2);
@@ -66,7 +127,7 @@ logs.post('/comment', (req, res) =>{
     const minutes = date_ob.getMinutes();
     const seconds = date_ob.getSeconds();
 
-    MongoClient.connect(uri,(err, client) => {
+    MongoClient.connect(uri, (err, client) => {
         if (err) {
             res.statusCode = 500;
             res.json({
@@ -84,8 +145,8 @@ logs.post('/comment', (req, res) =>{
         };
 
         const objId = new ObjectId(logId);
-        db.collection('logs').updateOne({_id: objId}, {$push: {'metadata.comments': newComment}}, (err, result) =>{
-            if(err){
+        db.collection('logs').updateOne({_id: objId}, {$push: {'metadata.comments': newComment}}, (err, result) => {
+            if (err) {
                 res.status(500).json({
                     err: "DB error: " + err.message
                 });
@@ -96,7 +157,7 @@ logs.post('/comment', (req, res) =>{
     });
 });
 
-logs.post('/newLog', (req, res) =>{
+logs.post('/newLog', (req, res) => {
     const {userId, consoleLog, missionName} = req.body;
     const date_ob = new Date();
     const day = ("0" + date_ob.getDate()).slice(-2);
@@ -107,7 +168,7 @@ logs.post('/newLog', (req, res) =>{
     const seconds = date_ob.getSeconds();
 
 
-    MongoClient.connect(uri,(err, client) => {
+    MongoClient.connect(uri, (err, client) => {
         if (err) {
             res.statusCode = 500;
             res.json({
@@ -129,8 +190,8 @@ logs.post('/newLog', (req, res) =>{
             }
         };
 
-        db.collection('logs').insertOne(newLog, (err, result) =>{
-            if(err){
+        db.collection('logs').insertOne(newLog, (err, result) => {
+            if (err) {
                 res.status(500).json({
                     err: "DB error: " + err.message
                 });

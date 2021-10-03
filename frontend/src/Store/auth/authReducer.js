@@ -8,7 +8,8 @@ const INITIAL_STATE = {
     email: null,
     firstName: null,
     lastName: null,
-    jwtToken: null
+    jwtToken: null,
+    isContributor: null
 };
 
 function authReducer(state = INITIAL_STATE, action) {
@@ -23,7 +24,8 @@ function authReducer(state = INITIAL_STATE, action) {
                 lastName: action.payload.lastName,
                 refreshToken: action.payload.refreshToken,
                 userId: action.payload.userId,
-                jwtToken: action.payload.jwtToken
+                jwtToken: action.payload.jwtToken,
+                isContributor: action.payload.isContributor
             };
         case REMOVE_AUTH:
             return INITIAL_STATE;

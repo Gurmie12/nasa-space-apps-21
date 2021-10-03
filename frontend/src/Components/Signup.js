@@ -20,6 +20,10 @@ const Signup = (props) => {
     const [occupation, setOccupation] = useState(null);
     const [isContributor, setIsContributor] = useState(false);
 
+    const handleCheckBox = (e) =>{
+        setIsContributor(!isContributor);
+    }
+
     const paperStyle = { padding: '30px 20px', width: 600, margin: "20px auto" }
     const headerStyle = { margin: 0 }
 
@@ -100,8 +104,7 @@ const Signup = (props) => {
                     </Grid>
                 </Grid>
                 <Grid align='center' paddingTop={'30px'}>
-                    <Stack direction={"column"} spacing={1}>
-                        {/*<div><CheckBox onChange={e => setIsContributor(!isContributor)} checked={isContributor}/> Are you a contributor?</div>*/}
+                    <Stack direction={"column"} spacing={1} alignItems={"center"}>
                         <Button type='submit' variant='contained' color='primary' onClick={handleSignup}>Sign up</Button>
                     </Stack>
                 </Grid>
