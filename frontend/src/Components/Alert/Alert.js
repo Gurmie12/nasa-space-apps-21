@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Snackbar } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+import React from "react";
+import { Snackbar, Alert as MuiAlert } from "@mui/material";
 import styled from "styled-components";
 
 const StyledAlert = styled(MuiAlert)`

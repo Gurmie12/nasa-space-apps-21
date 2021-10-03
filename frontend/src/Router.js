@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     BrowserRouter,
     Switch,
@@ -10,13 +10,30 @@ import Login from "./Components/Login";
 import { clearAlert } from "./Store/alerts/alertReducer.actions";
 import { connect } from "react-redux";
 import Alert from './Components/Alert/Alert';
+import styled from 'styled-components';
+
 const Router = (props) =>{
-    const {HomePage, NavBar, Footer} = props;
+    const {HomePage, NavBar, Footer, clearAlert} = props;
     const { showAlert, alertMessage, alertType } = props.alerts;
 
+    useEffect(() => {
+        if (showAlert) {
+            setTimeout(() => {
+                clearAlert();
+            }, 3000);
+        }
+    }, [showAlert, alertMessage, alertType]);
+
+    const CustomBrowserRouter = styled(BrowserRouter)`
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    `;
 
     return (
-        <BrowserRouter>
+        <CustomBrowserRouter>
             <NavBar />
             <Switch>
                 <Route exact path={"/"}><HomePage /></Route>
@@ -26,7 +43,7 @@ const Router = (props) =>{
             </Switch>
             {showAlert ? <Alert type={alertType} details={alertMessage} /> : null}
             <Footer />
-        </BrowserRouter>
+        </CustomBrowserRouter>
     )
 };
 

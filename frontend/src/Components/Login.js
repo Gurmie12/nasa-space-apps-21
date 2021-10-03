@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Grid, Link, Paper, TextField, Typography} from '@material-ui/core'
+import {Button, Grid, Link, Paper, TextField, Typography} from '@mui/material';
 import API from "../clients/BackendClient";
 import Logo from "../media/spacebook.png";
 import {connect} from "react-redux";
@@ -19,9 +19,14 @@ const Login = ({logInUser, addAlert}) => {
             const user = {email, password};
             API.post('/auth/login', user).then((res) => {
                 if (res.status === 201 && res.data.success) {
-                    const data = jwtDecode(res.data.token);
-                    logInUser({email: data.email, username: data.username, firstName: data.firstName, lastName: data.lastName, userId: data.user_id, refreshToken: data.refreshToken, jwtToken: res.data.token})
-                    addAlert({alertType: "success", alertMessage: res.data.success})
+                    if(res.data.token){
+                        const data = jwtDecode(res.data.token);
+                        console.log(res.data.token);
+                        logInUser({email: data.email, username: data.username, firstName: data.firstName, lastName: data.lastName, userId: data.user_id, refreshToken: data.refreshToken, jwtToken: res.data.token})
+                        addAlert({alertType: "success", alertMessage: res.data.success})
+                    }else{
+                        addAlert({alertType: "error", alertMessage: res.data.success ? res.data.success : res.data.err});
+                    }
                 } else {
                     addAlert({alertType: "error", alertMessage: res.data.success ? res.data.success : res.data.err});
                 }

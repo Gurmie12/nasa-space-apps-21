@@ -1,13 +1,45 @@
-import React from 'react'
-import {Grid, Paper, Avatar, Typography, TextField, Button, FormHelperText} from '@material-ui/core'
-import {Box} from "@mui/material";
+import React, {useState} from 'react'
+import {Grid, Paper, Typography, TextField, Button} from '@mui/material'
 import Logo from "../media/spacebook.png";
+import API from '../clients/BackendClient'
+import {addAlert} from "../Store/alerts/alertReducer.actions";
+import {logInUser} from "../Store/auth/authReducer.actions";
+import {connect} from "react-redux";
+import {useHistory} from "react-router";
 
-const Signup = () => {
+const Signup = (props) => {
+    const history = useHistory();
+    const {addAlert} = props;
+    const [username, setUsername] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [confirmPassword, setConfirmPassword] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [firstName, setFirstName] = useState(null);
+    const [lastName, setLastName] = useState(null);
+    const [country, setCountry] = useState(null);
+    const [occupation, setOccupation] = useState(null);
+
     const paperStyle = { padding: '30px 20px', width: 600, margin: "20px auto" }
     const headerStyle = { margin: 0 }
-    const avatarStyle = { backgroundColor: '#1bbd7e' }
-    const marginTop = { marginTop: 5 }
+
+    const handleSignup = () =>{
+        if(username && password && confirmPassword && email && firstName && lastName && country && occupation && password === confirmPassword ){
+            const user = {username, password, email, firstName, lastName, occupation, country};
+            API.post('/auth/signup', user).then((res) =>{
+                if(res.status === 201 && res.data.success){
+                    if(res.data.success === "User already exists with these credentials"){
+                        addAlert({alertType: "error", alertMessage: res.data.success});
+                    }else {
+                        history.push('/login');
+                        addAlert({alertType: "success", alertMessage: res.data.success});
+                    }
+                }else{
+                    addAlert({alertType: "error", alertMessage: res.data.err});
+                }
+            })
+        }
+    }
+
     return (
         <Grid>
             <Paper elevation={20} style={paperStyle}>
@@ -18,39 +50,65 @@ const Signup = () => {
                 </Grid>
                 <Grid container rowSpacing={5} columnSpacing={{md: 3 }}>
                     <Grid item md={6}>
-                        <TextField fullWidth label='Username'  placeholder="Create a username" />
+                        <TextField fullWidth label='Username'  placeholder="Create a username"
+                        value={username}
+                                   onChange={(e) => setUsername(e.target.value)}
+                        />
                     </Grid>
                     <Grid item md={6}>
-                        <TextField fullWidth label='Email' placeholder="Enter your email" />
+                        <TextField fullWidth label='Email' placeholder="Enter your email"
+                                   value={email}
+                                   onChange={(e) => setEmail(e.target.value)}
+                        />
                     </Grid>
                     <Grid item md={6}>
-                        <TextField fullWidth label='First Name' placeholder="Enter your first name" />
+                        <TextField fullWidth label='First Name' placeholder="Enter your first name"
+                                   value={firstName}
+                                   onChange={(e) => setFirstName(e.target.value)}
+                        />
                     </Grid>
                     <Grid item md={6}>
-                        <TextField fullWidth label='Last Name' placeholder="Enter your last name" />
+                        <TextField fullWidth label='Last Name' placeholder="Enter your last name"
+                                   value={lastName}
+                                   onChange={(e) => setLastName(e.target.value)}
+                        />
                     </Grid>
                     <Grid item md={6}>
-                        <TextField fullWidth label='Country' placeholder="Enter your country" />
+                        <TextField fullWidth label='Country' placeholder="Enter your country"
+                                   value={country}
+                                   onChange={(e) => setCountry(e.target.value)}
+                        />
                     </Grid>
                     <Grid item md={6}>
-                        <TextField fullWidth label='Occupation' placeholder="Enter your occupation" />
+                        <TextField fullWidth label='Occupation' placeholder="Enter your occupation"
+                                   value={occupation}
+                                   onChange={(e) => setOccupation(e.target.value)}
+                        />
                     </Grid>
                     <Grid item md={6}>
-                        <TextField fullWidth label='Password' placeholder="Enter your password"/>
+                        <TextField fullWidth label='Password' placeholder="Enter your password"
+                                   value={password}
+                                   onChange={(e) => setPassword(e.target.value)}
+                        />
                     </Grid>
                     <Grid item md={6}>
-                        <TextField fullWidth label='Confirm Password' placeholder="Confirm your password"/>
+                        <TextField fullWidth label='Confirm Password' placeholder="Confirm your password"
+                                   value={confirmPassword}
+                                   onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
                     </Grid>
                 </Grid>
                 <Grid align='center' paddingTop={'30px'}>
-
-                    <Box textAlign={'center'}>
-                        <Button type='submit' variant='contained' color='primary'>Sign up</Button>
-                    </Box>
+                    <Button type='submit' variant='contained' color='primary' onClick={handleSignup}>Sign up</Button>
                 </Grid>
             </Paper>
         </Grid>
     )
 }
 
-export default Signup;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addAlert: (payload) => dispatch(addAlert(payload))
+    };
+};
+export default connect(null, mapDispatchToProps)(Signup);

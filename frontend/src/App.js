@@ -8,7 +8,6 @@ import styled from "styled-components";
 import Store from './Store/Store';
 import { Provider } from "react-redux";
 
-
 function App() {
 
     const Container = styled.div`
