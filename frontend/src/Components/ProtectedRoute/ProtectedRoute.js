@@ -2,24 +2,24 @@ import React, {useEffect} from 'react';
 import {Route} from "react-router-dom";
 import {addAlert} from "../../Store/alerts/alertReducer.actions";
 import {connect} from "react-redux";
-import {useHistory} from "react-router";
+import {Redirect, useHistory} from "react-router";
 
 const ProtectedRoute = ({children, path, addAlert, user}) =>{
     const history = useHistory();
     const {isLoggedIn} = user;
 
-    useEffect(() =>{
-        if(!isLoggedIn){
-            addAlert({alertType: 'error', alertMessage: 'Please login to access ' + path});
-            history.push('/');
-        }
-    }, []);
+    if(isLoggedIn){
+        return(
+            <Route exact path={path}>
+                {children}
+            </Route>
+        )
+    }else{
+        return(
+            <Redirect to={'/'} />
+        )
 
-    return(
-        <Route exact path={path}>
-            {children}
-        </Route>
-    )
+    }
 };
 
 const mapStateToProps = (state) => {

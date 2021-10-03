@@ -14,8 +14,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {addAlert} from "../../Store/alerts/alertReducer.actions";
-import {logInUser} from "../../Store/auth/authReducer.actions";
+
 import {connect} from "react-redux";
 const Log = (props) =>{
     const {username, firstName, lastName, userId} = props.user;
