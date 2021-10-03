@@ -3,7 +3,6 @@ import {Grid, Paper, Typography, TextField, Button} from '@mui/material'
 import Logo from "../media/spacebook.png";
 import API from '../clients/BackendClient'
 import {addAlert} from "../Store/alerts/alertReducer.actions";
-import {logInUser} from "../Store/auth/authReducer.actions";
 import {connect} from "react-redux";
 import {useHistory} from "react-router";
 
