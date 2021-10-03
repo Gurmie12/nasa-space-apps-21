@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import {AppBar, Box, Button, ButtonGroup, Toolbar, InputBase, Avatar} from '@mui/material'
+import {AppBar, Box, Button, ButtonGroup, Toolbar, InputBase, Avatar, Stack, Modal} from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import Logo from "../media/spacebook.png";
 import {useHistory} from "react-router";
 import {addAlert} from "../Store/alerts/alertReducer.actions";
 import {logoutUser} from "../Store/auth/authReducer.actions";
 import {connect} from "react-redux";
+import {openCreateNewPost} from "../Store/posts/postsReducer.actions";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -50,7 +51,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const NavBar = (props) =>{
     const {firstName, lastName, isLoggedIn, isContributor} = props.user;
-    const {logoutUser, addAlert} = props;
+    const {logoutUser, addAlert, openCreateNewPost} = props;
 
     const history = useHistory();
 
@@ -71,10 +72,16 @@ const NavBar = (props) =>{
         addAlert({alertType: 'success', alertMessage: 'User Successfully logged out!'});
     }
 
+    const handleOpenNewCreatePost = (e) =>{
+        openCreateNewPost(true);
+    }
+
     return (
         <AppBar position="static" color={'transparent'}>
             <Toolbar>
-                <img src= {Logo} height={'62px'} width={'124px'} />
+                <Box marginTop={"5px"} marginBottom={"5px"} style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                    <img src= {Logo} height={'62px'} width={'124px'} style={{borderRadius: '2rem'}}/>
+                </Box>
                 {isLoggedIn &&
                     <>
                 <Search>
@@ -88,7 +95,7 @@ const NavBar = (props) =>{
                 </Search>
                         {isContributor &&
                             <ButtonGroup variant="text" color={"inherit"}>
-                                <Button>Create Console Log</Button>
+                                <Button variant={"contained"} onClick={handleOpenNewCreatePost}>Create Console Log</Button>
                             </ButtonGroup>
                         }
                     </>
@@ -101,10 +108,10 @@ const NavBar = (props) =>{
                             <Button onClick={sendToSignup}>Signup</Button>
                         </ButtonGroup>
                         :
-                        <ButtonGroup variant="text" aria-label="text button group" color={"inherit"}>
-                            <Button onClick={handleLogoutUser}>Logout</Button>
+                        <Stack direction={"row"} spacing={2}>
+                            <Button onClick={handleLogoutUser} variant={"contained"} color={"inherit"}>Logout</Button>
                             <Avatar>{getInitials(firstName, lastName)}</Avatar>
-                        </ButtonGroup>
+                        </Stack>
                     }
                 </Box>
             </Toolbar>
@@ -122,6 +129,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addAlert: (payload) => dispatch(addAlert(payload)),
         logoutUser: (payload) => dispatch(logoutUser()),
+        openCreateNewPost: (payload) => dispatch(openCreateNewPost(payload))
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

@@ -14,9 +14,11 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {Icecream} from "@mui/icons-material";
-import LaunchIcon from "@mui/icons-material/Launch";
+import {addAlert} from "../../Store/alerts/alertReducer.actions";
+import {logInUser} from "../../Store/auth/authReducer.actions";
+import {connect} from "react-redux";
 const Log = (props) =>{
+    const {username, firstName, lastName, userId} = props.user;
     const history = useHistory();
     const useQuery = () =>{
         return new URLSearchParams(useLocation().search);
@@ -24,7 +26,7 @@ const Log = (props) =>{
     const query = useQuery();
     const [consoleLog, setConsoleLog] = useState(null);
     const [userData, setUserData] = useState(null);
-    const [comment, setComment] = useState(null);
+    const [comment, setComment] = useState("");
     const [update, setUpdate] = useState(false);
 
     useEffect(() =>{
@@ -56,7 +58,7 @@ const Log = (props) =>{
     }
 
     const handleComment = () =>{
-        const commentData = {userId: userData._id, logId: query.get('id'), comment};
+        const commentData = {userId, logId: query.get('id'), comment, username, firstName, lastName};
         API.post('/logs/comment', commentData).then((res) =>{
             if(res.status === 201){
                 setUpdate(true);
@@ -123,11 +125,10 @@ const Log = (props) =>{
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
-      align-items:flex-start;
+      align-items: center;
     `;
 
     if(consoleLog && userData){
-        console.log(consoleLog);
         return(
             <Container>
                 <CustomCard elevation={24}>
@@ -159,7 +160,7 @@ const Log = (props) =>{
                                                     <ListItemText>
                                                         <CustomStack direction={"row"} spacing={1}>
                                                             <Stack direction={"row"} spacing={1}>
-                                                                <Chip label={comment.userId} style={{fontSize: '10px'}} />
+                                                                <Chip label={comment.firstName + " " + comment.lastName} style={{fontSize: '10px'}} />
                                                                 <Chip label={comment.date} style={{fontSize: '10px'}}/>
                                                             </Stack>
                                                             <Typography variant={"body2"}>{comment.comment}</Typography>
@@ -188,4 +189,9 @@ const Log = (props) =>{
     )
 };
 
-export default Log;
+const mapStateToProps = (state) => {
+    return {
+        user: state.auth
+    };
+};
+export default connect(mapStateToProps, null)(Log);

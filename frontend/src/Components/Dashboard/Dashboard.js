@@ -1,14 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import {
-    Card,
     CircularProgress
 } from "@mui/material";
 import API from "../../clients/BackendClient";
 import MissionCard from "./MissionCard";
+import {addAlert} from "../../Store/alerts/alertReducer.actions";
+import {closeCreateNewPost} from "../../Store/posts/postsReducer.actions";
+import {connect} from "react-redux";
 
 const Dashboard = (props) =>{
+    const {addAlert, closeCreateNewPost} = props;
+    const {isCreateNewPostOpen} = props.posts;
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
     const [consoleLogs, setConsoleLogs] = useState(null);
 
     useEffect(() =>{
@@ -16,7 +21,7 @@ const Dashboard = (props) =>{
         API.get(`/logs/getAllLogs`).then((res) =>{
             if(res.status === 201){
                 setConsoleLogs(res.data);
-                setIsLoading(false);
+                setIsLoaded(true);
             }else{
                 throw Error("Internal Server Error");
             }
@@ -56,6 +61,9 @@ const Dashboard = (props) =>{
     `;
 
     if(isLoading){
+        if(isLoaded){
+            setIsLoading(false);
+        }
         return(
             <LoadingContainer>
             <CircularProgress />
@@ -63,7 +71,7 @@ const Dashboard = (props) =>{
         );
     }
 
-    if(consoleLogs && consoleLogs.length > 0){
+    if(consoleLogs && consoleLogs.length > 0 && isLoaded){
         return (
             <Container>
                 <Row>
@@ -94,4 +102,16 @@ const Dashboard = (props) =>{
 
 };
 
-export default Dashboard;
+const mapStateToProps = (state) => {
+    return {
+        posts: state.posts
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addAlert: (payload) => dispatch(addAlert(payload)),
+        closeCreateNewPost: () => dispatch(closeCreateNewPost())
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

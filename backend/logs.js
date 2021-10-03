@@ -18,7 +18,7 @@ logs.get('/getLog', (req, res) => {
         }
 
         const db = client.db(process.env.MONGO_DB_NAME);
-        db.collection('logs').find({$and: [{userId: {$eq: userId}}, {missionName: {$eq: mission}}]}).skip(parseInt(offset)).sort('data', 'descending').limit(parseInt(numberOfPosts)).toArray((err, result) => {
+        db.collection('logs').find({$and: [{userId: {$eq: userId}}, {missionName: {$eq: mission}}]}).skip(parseInt(offset)).sort('createdAt', 'ascending').limit(parseInt(numberOfPosts)).toArray((err, result) => {
             if (err) {
                 res.status(500).json({
                     err: 'DB error: ' + err.message
@@ -47,15 +47,24 @@ logs.get('/getAllLogs', (req, res) => {
                 consoleLogs: {
                     $push: {
                         _id: "$_id",
+                        createdAt: "$createdAt",
                         date: "$date",
                         time: "$time",
                         userId: "$userId",
                         message: "$message",
+                        username: "$username",
+                        firstName: "$firstName",
+                        lastName: "$lastName",
                         metadata: {likes: "$metadata.likes", comments: "$metadata.comments"}
+
                     }
                 }
             }
-        }]).toArray((err, result) => {
+        },
+            {
+                $sort: {"createdAt": -1}
+            }
+        ]).toArray((err, result) => {
             if (err) {
                 res.status(500).json({
                     err: 'DB error: ' + err.message
@@ -118,7 +127,7 @@ logs.get('/like', (req, res) => {
 });
 
 logs.post('/comment', (req, res) => {
-    const {userId, logId, comment} = req.body;
+    const {userId, logId, comment, username, firstName, lastName} = req.body;
     const date_ob = new Date();
     const day = ("0" + date_ob.getDate()).slice(-2);
     const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
@@ -138,10 +147,14 @@ logs.post('/comment', (req, res) => {
         const db = client.db(process.env.MONGO_DB_NAME);
 
         const newComment = {
+            createdAt: date_ob,
             date: day + "-" + month + "-" + year,
             time: hours + ":" + minutes + ":" + seconds,
             userId,
             comment,
+            username,
+            firstName,
+            lastName
         };
 
         const objId = new ObjectId(logId);
@@ -158,7 +171,7 @@ logs.post('/comment', (req, res) => {
 });
 
 logs.post('/newLog', (req, res) => {
-    const {userId, consoleLog, missionName} = req.body;
+    const {userId, consoleLog, missionName, username, firstName, lastName} = req.body;
     const date_ob = new Date();
     const day = ("0" + date_ob.getDate()).slice(-2);
     const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
@@ -179,11 +192,15 @@ logs.post('/newLog', (req, res) => {
         const db = client.db(process.env.MONGO_DB_NAME);
 
         const newLog = {
+            createdAt: date_ob,
             date: day + "-" + month + "-" + year,
             time: hours + ":" + minutes + ":" + seconds,
             userId,
             message: consoleLog,
             missionName,
+            username,
+            firstName,
+            lastName,
             metadata: {
                 likes: 0,
                 comments: [],

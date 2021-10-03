@@ -51,6 +51,10 @@ const MissionCard = ({data}) =>{
       align-items: center;
     `;
 
+    const handleSort = (a, b) =>{
+        return b.createdAt - a.createdAt;
+    }
+
     return(
         <CustomCard elevation={24} style={{height: '100%', width: '100%'}}>
             <TitleContainer>
@@ -59,13 +63,13 @@ const MissionCard = ({data}) =>{
             <ConsoleLogContainer>
                 <List style={{height: '100%', width: '100%', overFlowY: 'none'}}>
                     {
-                        data.consoleLogs.map((consoleLog, i) =>{
+                        data.consoleLogs.sort(handleSort).map((consoleLog, i) =>{
                             return(
                                 <CustomListItem key={i}>
                                     <ListItemText>
                                         <CustomStack direction={"row"} spacing={1}>
                                             <Stack direction={"row"} spacing={1}>
-                                                <Chip label={consoleLog.userId} style={{fontSize: '10px'}} />
+                                                <Chip label={consoleLog.firstName +" "+ consoleLog.lastName} style={{fontSize: '10px'}} />
                                                 <Chip label={consoleLog.date} style={{fontSize: '10px'}}/>
                                             </Stack>
                                             <Stack direction={"row"} spacing={0}>
