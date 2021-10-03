@@ -3,7 +3,6 @@ import API from "./clients/BackendClient";
 import Router from "./Router";
 import HomePage from "./Components/HomePage/HomePage";
 import NavBar from "./Components/NavBar";
-import Footer from "./Components/Footer";
 import styled from "styled-components";
 import Store from './Store/Store';
 import { Provider } from "react-redux";
@@ -29,7 +28,7 @@ function App() {
     return (
         <Container>
             <Provider store={Store}>
-                <Router HomePage={HomePage} NavBar={NavBar} Footer={Footer} />
+                <Router HomePage={HomePage} NavBar={NavBar} />
             </Provider>
         </Container>
     );

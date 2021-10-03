@@ -11,9 +11,12 @@ import { clearAlert } from "./Store/alerts/alertReducer.actions";
 import { connect } from "react-redux";
 import Alert from './Components/Alert/Alert';
 import styled from 'styled-components';
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+import Dashboard from "./Components/Dashboard/Dashboard";
+import Log from "./Components/Log/Log";
 
 const Router = (props) =>{
-    const {HomePage, NavBar, Footer, clearAlert} = props;
+    const {HomePage, NavBar, clearAlert} = props;
     const { showAlert, alertMessage, alertType } = props.alerts;
 
     useEffect(() => {
@@ -39,10 +42,11 @@ const Router = (props) =>{
                 <Route exact path={"/"}><HomePage /></Route>
                 <Route exact path={"/login"}><Login /></Route>
                 <Route exact path={'/signup'}><Signup /></Route>
+                <ProtectedRoute path={'/dashboard'}><Dashboard /></ProtectedRoute>
+                <ProtectedRoute path={'/log'}><Log/></ProtectedRoute>
                 <Redirect to={'/'} />
             </Switch>
             {showAlert ? <Alert type={alertType} details={alertMessage} /> : null}
-            <Footer />
         </CustomBrowserRouter>
     )
 };

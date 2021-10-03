@@ -6,8 +6,10 @@ import {connect} from "react-redux";
 import {addAlert} from "../Store/alerts/alertReducer.actions";
 import {logInUser} from "../Store/auth/authReducer.actions";
 import jwtDecode from "jwt-decode";
+import {useHistory} from "react-router";
 
 const Login = ({logInUser, addAlert}) => {
+    const history = useHistory();
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
 
@@ -21,8 +23,8 @@ const Login = ({logInUser, addAlert}) => {
                 if (res.status === 201 && res.data.success) {
                     if(res.data.token){
                         const data = jwtDecode(res.data.token);
-                        console.log(res.data.token);
                         logInUser({email: data.email, username: data.username, firstName: data.firstName, lastName: data.lastName, userId: data.user_id, refreshToken: data.refreshToken, jwtToken: res.data.token})
+                        history.push('/dashboard');
                         addAlert({alertType: "success", alertMessage: res.data.success})
                     }else{
                         addAlert({alertType: "error", alertMessage: res.data.success ? res.data.success : res.data.err});

@@ -1,10 +1,11 @@
 import React, {useState} from 'react'
-import {Grid, Paper, Typography, TextField, Button} from '@mui/material'
+import {Grid, Paper, Typography, TextField, Button, Stack, FormControlLabel} from '@mui/material'
 import Logo from "../media/spacebook.png";
 import API from '../clients/BackendClient'
 import {addAlert} from "../Store/alerts/alertReducer.actions";
 import {connect} from "react-redux";
 import {useHistory} from "react-router";
+import {CheckBox} from "@mui/icons-material";
 
 const Signup = (props) => {
     const history = useHistory();
@@ -17,6 +18,7 @@ const Signup = (props) => {
     const [lastName, setLastName] = useState(null);
     const [country, setCountry] = useState(null);
     const [occupation, setOccupation] = useState(null);
+    const [isContributor, setIsContributor] = useState(false);
 
     const paperStyle = { padding: '30px 20px', width: 600, margin: "20px auto" }
     const headerStyle = { margin: 0 }
@@ -98,7 +100,10 @@ const Signup = (props) => {
                     </Grid>
                 </Grid>
                 <Grid align='center' paddingTop={'30px'}>
-                    <Button type='submit' variant='contained' color='primary' onClick={handleSignup}>Sign up</Button>
+                    <Stack direction={"column"} spacing={1}>
+                        {/*<div><CheckBox onChange={e => setIsContributor(!isContributor)} checked={isContributor}/> Are you a contributor?</div>*/}
+                        <Button type='submit' variant='contained' color='primary' onClick={handleSignup}>Sign up</Button>
+                    </Stack>
                 </Grid>
             </Paper>
         </Grid>
