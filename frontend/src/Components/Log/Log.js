@@ -115,14 +115,15 @@ const Log = (props) =>{
     `;
 
     const CustomListItem = styled(ListItem)`
+      left: 0;
       border-top: 1px solid black;
     `;
 
     const CustomStack = styled(Stack)`
       display: flex;
       flex-direction: row;
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-start;
+      align-items:flex-start;
     `;
 
     if(consoleLog && userData){
@@ -150,25 +151,25 @@ const Log = (props) =>{
                             consoleLog.metadata.comments.length === 0 ?
                                 <Typography>Be the first to comment.</Typography>
                                 :
-                                    <List style={{height: '100%', width: '100%', overFlowY: 'none'}}>
-                                        {
-                                            consoleLog.metadata.comments.map((comment, i) =>{
-                                                return(
-                                                    <CustomListItem key={i}>
-                                                        <ListItemText>
-                                                            <CustomStack direction={"row"} spacing={1}>
-                                                                <Stack direction={"row"} spacing={1}>
-                                                                    <Chip label={comment.userId} style={{fontSize: '10px'}} />
-                                                                    <Chip label={comment.date} style={{fontSize: '10px'}}/>
-                                                                </Stack>
-                                                                <Typography variant={"body2"}>{comment.comment}</Typography>
-                                                            </CustomStack>
-                                                        </ListItemText>
-                                                    </CustomListItem>
-                                                )
-                                            })
-                                        }
-                                    </List>
+                                <List style={{height: '100%', width: '100%', overFlowY: 'none'}}>
+                                    {
+                                        consoleLog.metadata.comments.map((comment, i) =>{
+                                            return(
+                                                <CustomListItem key={i}>
+                                                    <ListItemText>
+                                                        <CustomStack direction={"row"} spacing={1}>
+                                                            <Stack direction={"row"} spacing={1}>
+                                                                <Chip label={comment.userId} style={{fontSize: '10px'}} />
+                                                                <Chip label={comment.date} style={{fontSize: '10px'}}/>
+                                                            </Stack>
+                                                            <Typography variant={"body2"}>{comment.comment}</Typography>
+                                                        </CustomStack>
+                                                    </ListItemText>
+                                                </CustomListItem>
+                                            )
+                                        })
+                                    }
+                                </List>
                         }
                     </CommentsContainer>
                     <CommentInputContainer>
