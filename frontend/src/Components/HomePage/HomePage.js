@@ -1,7 +1,6 @@
 import React from 'react';
 import {Typography} from "@mui/material";
 import styled from "styled-components";
-import {Button, Grid} from "@mui/material";
 import {params} from "./Particles";
 import Particles from "react-tsparticles";
 
@@ -24,7 +23,7 @@ const HomePage = (props) =>{
       display: flex;
       justify-content: center;
       flex-direction: column;
-      padding: 5rem;
+      padding: 3rem;
     `;
 
     const DetailsColumn = styled(Column)`
@@ -32,15 +31,10 @@ const HomePage = (props) =>{
       text-align: center;
     `;
 
-    const Overlying = styled.div`
-      height: 100%;
-      width: 100%;
-    `;
-
     return(
-        <Overlying>
-            <div style={{ position: 'absolute', height: "100%"}}>
-                {<Particles  options={params} height={"100%"}/>}
+        <div>
+            <div style={{ position: 'fixed'}}>
+                {<Particles  params={params} />}
             </div>
             <Container>
                 <Row>
@@ -50,6 +44,7 @@ const HomePage = (props) =>{
                     </DetailsColumn>
                     <DetailsColumn>
                         <Typography variant={"h5"} style={{fontFamily: "'Titillium Web', sans-serif"}}>
+                            <br/>
                             Spacebook aims to connect people and astronauts alike. It allows for seamless
                             integration of console log information from moon missions to all people and
                             allows them to comment and investigate the information with support!
@@ -62,50 +57,23 @@ const HomePage = (props) =>{
                             Spacebook's Objective
                         </Typography>
                         <br />
-                        <Typography variant={"h5"} style={{fontFamily: "'Titillium Web', sans-serif"}}>
-                            Filler text for Our Objective
+                        <Typography variant={"body2"} style={{fontFamily: "'Titillium Web', sans-serif"}}>
+                            With the planned Artemis lunar missions and other various space missions, a broad community from all over the world will look for ways to follow these exciting adventures. The interested public would wish to communicate regarding these missions and have a direct look into what is occurring outside of Earth’s atmosphere. Spacebook is what this broad community of interested individuals are looking for.
+                            <br/>
+                            <br/>
+                            The gap between terrestrial and extraterrestrial is bridged by Spacebook because users can immerse themselves in lunar space missions based on data shared by contributors. For space agencies, Spacebook creates an environment for all console logs to be seen, while a permanent log is left for them to reference in the future. Both users and contributors have personal interests satisfied by using Spacebook.
                         </Typography>
                     </DetailsColumn>
-                    <Column>
-                        {/* Image for Our Objective*/}
-                    </Column>
-                </Row>
-                <Row>
-                    <Column>
-                        {/* Image for Our Team*/}
-                    </Column>
                     <DetailsColumn>
                         <Typography variant={"h3"}  style={{fontFamily: "'Titillium Web', sans-serif", textDecorationLine: "underline"}}>
                             Team Spacebook
                         </Typography>
                         <br />
-                        <Typography variant={"h5"} style={{fontFamily: "'Titillium Web', sans-serif"}}>
-                            Filler Text for Our Team
-                        </Typography>
+                        <img src="media/teamLogo.png" height={'190px'} width={'605px'}/>
                     </DetailsColumn>
-                </Row>
-                <Row>
-                    <DetailsColumn>
-                        <Typography variant={"h3"}  style={{fontFamily: "'Titillium Web', sans-serif", textDecorationLine: "underline"}}>
-                            Our Journey Through Space!
-                        </Typography>
-                        <br/>
-                        <Typography variant={"h5"} style={{fontFamily: "'Titillium Web', sans-serif"}}>
-                            Filler text for Hackathon Journey
-                        </Typography>
-                    </DetailsColumn>
-                    <Column>
-                        {/* Image for Our Hackathon Journey*/}
-                    </Column>
-                </Row>
-                <Row>
-                    <Grid container justifyContent="center"
-                          alignItems="center" textAlign={'center'}>
-                        <Button type='submit' variant='contained' color='primary'>Get Started!</Button>
-                    </Grid>
                 </Row>
             </Container>
-        </Overlying>
+        </div>
     )
 };
 

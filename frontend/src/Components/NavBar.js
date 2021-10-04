@@ -103,8 +103,8 @@ const NavBar = (props) =>{
                 <Box sx={{ display: { xs: 'none', md: 'flex' }}}>
                     {!isLoggedIn ?
                         <ButtonGroup variant="text" aria-label="text button group" color={"inherit"}>
-                            <Button onClick={sendToLogin}>Login</Button>
-                            <Button onClick={sendToSignup}>Signup</Button>
+                            <Button onClick={sendToLogin} variant={"contained"}>Login</Button>
+                            <Button onClick={sendToSignup} variant={"contained"}>Signup</Button>
                         </ButtonGroup>
                         :
                         <Stack direction={"row"} spacing={2}>
