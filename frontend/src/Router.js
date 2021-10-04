@@ -23,7 +23,7 @@ const Router = (props) =>{
         if (showAlert) {
             setTimeout(() => {
                 clearAlert();
-            }, 3000);
+            }, 6000);
         }
     }, [showAlert, alertMessage, alertType]);
 

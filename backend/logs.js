@@ -2,10 +2,12 @@ const express = require('express');
 const dotenv = require('dotenv');
 const ObjectId = require('mongodb').ObjectId;
 const MongoClient = require('mongodb').MongoClient;
+const fileUpload = require('express-fileupload');
 dotenv.config();
 
 const uri = `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@spaceappscluster.1ebzr.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`;
 const logs = express();
+logs.use(fileUpload());
 
 logs.get('/getLog', (req, res) => {
     const {userId, numberOfPosts, offset, mission} = req.query;
@@ -55,6 +57,7 @@ logs.get('/getAllLogs', (req, res) => {
                         username: "$username",
                         firstName: "$firstName",
                         lastName: "$lastName",
+                        file: "$file",
                         metadata: {likes: "$metadata.likes", comments: "$metadata.comments"}
 
                     }
@@ -179,6 +182,17 @@ logs.post('/newLog', (req, res) => {
     const hours = date_ob.getHours();
     const minutes = date_ob.getMinutes();
     const seconds = date_ob.getSeconds();
+    const file = req.files.file;
+    let uploadedFile;
+    file.mv(`../frontend/public/uploads/${file.name}`, err =>{
+        if(err){
+            res.status(500).json({
+                err: 'Path does not exist'
+            })
+        }
+
+        uploadedFile = {fileName: file.name, filePath: `uploads/${file.name}`}
+    })
 
 
     MongoClient.connect(uri, (err, client) => {
@@ -201,6 +215,7 @@ logs.post('/newLog', (req, res) => {
             username,
             firstName,
             lastName,
+            file: uploadedFile ? uploadedFile : null,
             metadata: {
                 likes: 0,
                 comments: [],

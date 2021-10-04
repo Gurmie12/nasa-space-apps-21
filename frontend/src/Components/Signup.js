@@ -1,11 +1,9 @@
 import React, {useState} from 'react'
-import {Grid, Paper, Typography, TextField, Button, Stack, FormControlLabel} from '@mui/material'
-import Logo from "../media/spacebook.png";
+import {Grid, Paper, Typography, TextField, Button, Stack, FormControlLabel, Checkbox} from '@mui/material'
 import API from '../clients/BackendClient'
 import {addAlert} from "../Store/alerts/alertReducer.actions";
 import {connect} from "react-redux";
 import {useHistory} from "react-router";
-import {CheckBox} from "@mui/icons-material";
 
 const Signup = (props) => {
     const history = useHistory();
@@ -49,7 +47,7 @@ const Signup = (props) => {
         <Grid>
             <Paper elevation={20} style={paperStyle}>
                 <Grid align='center'>
-                    <img src= {Logo} height={'100px'} width={'200px'} style={{borderRadius: '20rem'}}/>
+                    <img src="media/spacebook.png" height={'100px'} width={'200px'} style={{borderRadius: '20rem'}}/>
                     <h2 style={headerStyle}>Sign Up</h2>
                     <Typography variant='h6' gutterBottom>Please fill this form to create an account !</Typography>
                 </Grid>
@@ -103,8 +101,12 @@ const Signup = (props) => {
                         />
                     </Grid>
                 </Grid>
-                <Grid align='center' paddingTop={'30px'}>
+                <Grid align='center' paddingTop={'15px'}>
                     <Stack direction={"column"} spacing={1} alignItems={"center"}>
+                        <FormControlLabel
+                            control={<Checkbox name="checkedA" />}
+                            label="Will you be contributing to Spacebook?"
+                        />
                         <Button type='submit' variant='contained' color='primary' onClick={handleSignup}>Sign up</Button>
                     </Stack>
                 </Grid>

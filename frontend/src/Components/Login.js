@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Grid, Link, Paper, TextField, Typography} from '@mui/material';
 import API from "../clients/BackendClient";
-import Logo from "../media/spacebook.png";
 import {connect} from "react-redux";
 import {addAlert} from "../Store/alerts/alertReducer.actions";
 import {logInUser} from "../Store/auth/authReducer.actions";
@@ -42,7 +41,7 @@ const Login = ({logInUser, addAlert}) => {
         <Grid>
             <Paper elevation={10} style={paperStyle}>
                 <Grid align='center'>
-                    <img src={Logo} height={'100px'} width={'200px'} style={{borderRadius: '20rem'}}/>
+                    <img src="media/spacebook.png" height={'100px'} width={'200px'} style={{borderRadius: '20rem'}}/>
                     <h2>Login</h2>
                 </Grid>
 

@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const expressJwt = require('express-jwt');
 const auth = require('./auth');
 const logs = require('./logs');
 const app = express();
@@ -14,7 +13,6 @@ app.use(bodyParser.json())
 app.use(cors());
 app.use('/auth', auth);
 app.use('/logs', logs);
-
 
 app.listen(PORT, () =>{
     console.log(`Backend started on port ${PORT}`);

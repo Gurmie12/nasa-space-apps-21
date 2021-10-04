@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import {AppBar, Box, Button, ButtonGroup, Toolbar, InputBase, Avatar, Stack, Modal} from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
-import Logo from "../media/spacebook.png";
 import {useHistory} from "react-router";
 import {addAlert} from "../Store/alerts/alertReducer.actions";
 import {logoutUser} from "../Store/auth/authReducer.actions";
@@ -80,7 +79,7 @@ const NavBar = (props) =>{
         <AppBar position="static" color={'transparent'}>
             <Toolbar>
                 <Box marginTop={"5px"} marginBottom={"5px"} style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
-                    <img src= {Logo} height={'62px'} width={'124px'} style={{borderRadius: '2rem'}}/>
+                    <img src="media/spacebook.png" height={'62px'} width={'124px'} style={{borderRadius: '2rem'}}/>
                 </Box>
                 {isLoggedIn &&
                     <>

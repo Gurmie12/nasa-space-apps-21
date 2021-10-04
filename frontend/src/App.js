@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import API from "./clients/BackendClient";
+import React from 'react';
 import Router from "./Router";
 import HomePage from "./Components/HomePage/HomePage";
 import NavBar from "./Components/NavBar";
@@ -17,13 +16,6 @@ function App() {
       flex-direction: column;
       align-items: center;
     `;
-
-    useEffect(() => {
-        API.get('/')
-            .then(res =>{
-                console.log('Fetched', res.data);
-            });
-    }, []);
 
     return (
         <Container>

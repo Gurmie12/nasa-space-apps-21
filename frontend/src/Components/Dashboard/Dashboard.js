@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {
     Button, ButtonGroup,
     Card,
-    CircularProgress, Stack, TextField, Typography
+    CircularProgress, Stack, TextField, Typography, Input
 } from "@mui/material";
 import API from "../../clients/BackendClient";
 import MissionCard from "./MissionCard";
@@ -19,6 +19,7 @@ const Dashboard = (props) =>{
     const [consoleLogs, setConsoleLogs] = useState(null);
     const [inputMissionName, setInputMissionName] = useState(null);
     const [inputConsoleLog, setInputConsoleLog] = useState(null);
+    const [file, setFile] = useState(null);
 
     useEffect(() =>{
         setIsLoading(true);
@@ -34,8 +35,16 @@ const Dashboard = (props) =>{
 
     const addNewPost = () =>{
         if(inputMissionName && inputConsoleLog){
-            const newLog = {firstName, lastName, username, userId, missionName: inputMissionName, consoleLog: inputConsoleLog};
-            API.post('/logs/newLog', newLog).then((res) =>{
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('username', username);
+            formData.append('userId', userId);
+            formData.append('missionName', inputMissionName);
+            formData.append('consoleLog', inputConsoleLog);
+
+            API.post('/logs/newLog', formData, {headers: {'Content-Type': "multipart/form-data"}}).then((res) =>{
                 if(res.status === 201){
                     addAlert({alertType: "success", alertMessage: res.data.success});
                     closeCreateNewPost();
@@ -120,6 +129,8 @@ const Dashboard = (props) =>{
     const UploadColumn = styled.div`
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
       width: 60%;
       height: 90%;
       border: 1px dotted black;
@@ -137,6 +148,12 @@ const Dashboard = (props) =>{
             </LoadingContainer>
         );
     }
+
+    const handleFileChange = (e) =>{
+        setFile(e.target.files[0]);
+    };
+
+    console.log(file);
 
     if(consoleLogs && consoleLogs.length > 0){
         return (
@@ -158,7 +175,7 @@ const Dashboard = (props) =>{
                                                          />
                                         </InputColumn>
                                         <UploadColumn>
-
+                                            <Input type={"file"} onChange={handleFileChange}/>
                                         </UploadColumn>
                                     </CreateRow>
                                     <ButtonGroup variant={"outlined"} color={"inherit"}>
