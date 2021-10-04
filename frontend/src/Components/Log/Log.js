@@ -128,7 +128,6 @@ const Log = (props) =>{
     `;
 
     if(consoleLog && userData){
-        console.log(consoleLog.file.filePath);
         return(
             <Container>
                 <CustomCard elevation={24}>
@@ -146,10 +145,13 @@ const Log = (props) =>{
                                 <Chip label={consoleLog.metadata.comments.length + " Comments"} />
                             </Stack>
                         </Stack>
-                        <Stack direction={"column"} spacing={1} style={{alignItems: 'center'}}>
-                            <img src={consoleLog.file.filePath} height={"100px"} width={"100px"}/>
-                            <Typography variant={"body2"}>{consoleLog.file.fileName}</Typography>
-                        </Stack>
+                        {
+                            consoleLog.file &&
+                            <Stack direction={"column"} spacing={1} style={{alignItems: 'center'}}>
+                                <img src={consoleLog.file.filePath} height={"100px"} width={"100px"}/>
+                                <Typography variant={"body2"}>{consoleLog.file.fileName}</Typography>
+                            </Stack>
+                        }
                     </TitleContainer>
                     <CommentsContainer>
                         {

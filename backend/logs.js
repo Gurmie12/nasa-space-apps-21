@@ -43,7 +43,9 @@ logs.get('/getAllLogs', (req, res) => {
         }
 
         const db = client.db(process.env.MONGO_DB_NAME);
-        db.collection('logs').aggregate([{$match: {missionName: {$in: ["Test Mission 1", "Test Mission 2", "Test Mission 3", "Test Mission 4"]}}}, {
+        db.collection('logs').aggregate([{$match: {missionName: {$in: ["Test Mission 1", "Test Mission 2", "Test Mission 3", "Test Mission 4"]}}},{
+            $sort: {"_id": 1}
+        }, {
             $group: {
                 _id: '$missionName',
                 consoleLogs: {
@@ -63,10 +65,7 @@ logs.get('/getAllLogs', (req, res) => {
                     }
                 }
             }
-        },
-            {
-                $sort: {"createdAt": -1}
-            }
+        }
         ]).toArray((err, result) => {
             if (err) {
                 res.status(500).json({
@@ -182,18 +181,24 @@ logs.post('/newLog', (req, res) => {
     const hours = date_ob.getHours();
     const minutes = date_ob.getMinutes();
     const seconds = date_ob.getSeconds();
-    const file = req.files.file;
+    let file;
+    if(req.file){
+        file = req.files.file;
+    }else{
+        file = null
+    }
     let uploadedFile;
-    file.mv(`../frontend/public/uploads/${file.name}`, err =>{
-        if(err){
-            res.status(500).json({
-                err: 'Path does not exist'
-            })
-        }
+    if(file){
+        file.mv(`../frontend/public/uploads/${file.name}`, err =>{
+            if(err){
+                res.status(500).json({
+                    err: 'Path does not exist'
+                })
+            }
 
-        uploadedFile = {fileName: file.name, filePath: `uploads/${file.name}`}
-    })
-
+            uploadedFile = {fileName: file.name, filePath: `uploads/${file.name}`}
+        })
+    }
 
     MongoClient.connect(uri, (err, client) => {
         if (err) {

@@ -63,7 +63,7 @@ const MissionCard = ({data}) =>{
             <ConsoleLogContainer>
                 <List style={{height: '100%', width: '100%', overFlowY: 'none'}}>
                     {
-                        data.consoleLogs.sort(handleSort).map((consoleLog, i) =>{
+                        data.consoleLogs.sort((a,b) => handleSort(a,b)).map((consoleLog, i) =>{
                             return(
                                 <CustomListItem key={i}>
                                     <ListItemText>
