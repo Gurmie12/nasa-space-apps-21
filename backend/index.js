@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const auth = require('./auth');
 const logs = require('./logs');
+const path = require("path");
 const app = express();
 const PORT = 3030;
 
@@ -13,6 +14,10 @@ app.use(bodyParser.json())
 app.use(cors());
 app.use('/auth', auth);
 app.use('/logs', logs);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/frontend/build/index.html'));
+});
 
 app.listen(PORT, () =>{
     console.log(`Backend started on port ${PORT}`);
