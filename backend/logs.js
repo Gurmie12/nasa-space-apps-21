@@ -189,7 +189,7 @@ logs.post('/newLog', (req, res) => {
     }
     let uploadedFile;
     if(file){
-        file.mv(`../frontend/public/uploads/${file.name}`, err =>{
+        file.mv(`./frontend/public/uploads/${file.name}`, err =>{
             if(err){
                 res.status(500).json({
                     err: 'Path does not exist'
